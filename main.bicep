@@ -1,6 +1,7 @@
 param location string = resourceGroup().location
 
 param workbookName string = 'AzMapping'
+param workbookDescription string = 'This workbook provides a mapping of Logic and Physical Availability zones on Azure subscriptions. '
 param tags object = {
   'hidden-title': workbookName
 }
@@ -15,6 +16,7 @@ resource workbook 'Microsoft.Insights/workbooks@2023-06-01' = {
   kind: 'shared'
   properties: {
     displayName: workbookName
+    description: workbookDescription
     category: 'Custom'
     serializedData: workbookJSON
     sourceId: 'Azure Monitor'

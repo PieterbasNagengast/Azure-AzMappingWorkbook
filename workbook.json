@@ -1,0 +1,184 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+        {
+            "type": 1,
+            "content": {
+                "json": "# Azure Availability Zone Mapping\r\n\r\nPhysical Availability Zones are distinct data centers within an Azure region, each with independent power, cooling, and networking to ensure high availability. Logical Availability Zones are the mappings of these physical zones within your Azure subscription, automatically assigned per subscription."
+            },
+            "name": "text - 2"
+        },
+        {
+            "type": 3,
+            "content": {
+                "version": "KqlItem/1.0",
+                "query": "summarize by subscriptionId",
+                "size": 0,
+                "title": "Select Subscription:",
+                "exportFieldName": "subscriptionId",
+                "exportParameterName": "subscriptionId",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                    "value::all"
+                ],
+                "visualization": "table",
+                "gridSettings": {
+                    "formatters": [
+                        {
+                            "columnMatch": "subscriptionId",
+                            "formatter": 15,
+                            "formatOptions": {
+                                "linkTarget": null,
+                                "showIcon": true,
+                                "customColumnWidthSetting": "200px"
+                            }
+                        }
+                    ],
+                    "filter": true,
+                    "sortBy": [
+                        {
+                            "itemKey": "$gen_link_subscriptionId_0",
+                            "sortOrder": 1
+                        }
+                    ],
+                    "labelSettings": [
+                        {
+                            "columnId": "subscriptionId",
+                            "label": "Subscription"
+                        }
+                    ]
+                },
+                "sortBy": [
+                    {
+                        "itemKey": "$gen_link_subscriptionId_0",
+                        "sortOrder": 1
+                    }
+                ]
+            },
+            "customWidth": "25",
+            "name": "GetSubscriptionsQuery"
+        },
+        {
+            "type": 3,
+            "content": {
+                "version": "KqlItem/1.0",
+                "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{subscriptionId}/locations?api-version=2022-12-01\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value[?(@.metadata.regionType==\\\"Physical\\\" && @.availabilityZoneMappings!=null)]\",\"columns\":[{\"path\":\"$.metadata.geographyGroup\",\"columnid\":\"geographyGroup\"},{\"path\":\"$.id\",\"columnid\":\"subscription\",\"columnType\":\"string\"},{\"path\":\"$.displayName\",\"columnid\":\"location\",\"columnType\":\"string\"},{\"path\":\"$.availabilityZoneMappings[0].physicalZone\",\"columnid\":\"Az1\",\"columnType\":\"string\"},{\"path\":\"$.availabilityZoneMappings[1].physicalZone\",\"columnid\":\"Az2\",\"columnType\":\"string\"},{\"path\":\"$.availabilityZoneMappings[2].physicalZone\",\"columnid\":\"Az3\",\"columnType\":\"string\"},{\"path\":\"$.metadata.geography\",\"columnid\":\"geography\",\"columnType\":\"string\"}]}}]}",
+                "size": 3,
+                "title": "Availability Zone mapping per region:",
+                "noDataMessage": "Please select Subscription to get Availability Zone Mapping",
+                "exportedParameters": [
+                    {
+                        "parameterType": 1
+                    },
+                    {
+                        "parameterType": 1
+                    }
+                ],
+                "showExportToExcel": true,
+                "exportToExcelOptions": "all",
+                "queryType": 12,
+                "gridSettings": {
+                    "formatters": [
+                        {
+                            "columnMatch": "subscription",
+                            "formatter": 5
+                        },
+                        {
+                            "columnMatch": "location",
+                            "formatter": 17,
+                            "formatOptions": {
+                                "customColumnWidthSetting": "175px"
+                            }
+                        },
+                        {
+                            "columnMatch": "Az1",
+                            "formatter": 0,
+                            "formatOptions": {
+                                "customColumnWidthSetting": "175px"
+                            }
+                        },
+                        {
+                            "columnMatch": "Az2",
+                            "formatter": 0,
+                            "formatOptions": {
+                                "customColumnWidthSetting": "175px"
+                            }
+                        },
+                        {
+                            "columnMatch": "Az3",
+                            "formatter": 0,
+                            "formatOptions": {
+                                "customColumnWidthSetting": "175px"
+                            }
+                        },
+                        {
+                            "columnMatch": "geography",
+                            "formatter": 5
+                        }
+                    ],
+                    "filter": true,
+                    "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                            "geographyGroup"
+                        ],
+                        "expandTopLevel": false
+                    },
+                    "sortBy": [
+                        {
+                            "itemKey": "$gen_count_$gen_group_0",
+                            "sortOrder": 1
+                        }
+                    ],
+                    "labelSettings": [
+                        {
+                            "columnId": "geographyGroup",
+                            "label": "Geo"
+                        },
+                        {
+                            "columnId": "location",
+                            "label": "Location"
+                        }
+                    ]
+                },
+                "sortBy": [
+                    {
+                        "itemKey": "$gen_count_$gen_group_0",
+                        "sortOrder": 1
+                    }
+                ]
+            },
+            "customWidth": "75",
+            "name": "GetAzMappingQuery"
+        },
+        {
+            "type": 3,
+            "content": {
+                "version": "KqlItem/1.0",
+                "query": "",
+                "size": 3,
+                "queryType": 2,
+                "visualization": "map",
+                "mapSettings": {
+                    "locInfo": "AzureLoc",
+                    "locInfoColumn": "displayName",
+                    "latitude": "latitude",
+                    "longitude": "longitude",
+                    "sizeAggregation": "Sum",
+                    "defaultSize": 20,
+                    "opacity": 1,
+                    "labelSettings": "displayName",
+                    "legendMetric": "users",
+                    "legendAggregation": "Sum",
+                    "itemColorSettings": null
+                }
+            },
+            "name": "query - 3"
+        }
+    ],
+    "fallbackResourceIds": [
+        "azure monitor"
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

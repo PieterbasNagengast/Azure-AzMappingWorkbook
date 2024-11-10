@@ -11,3 +11,7 @@ With this workbook you can map the Logical Azure Availability Zones to the Physi
 5. The workbook will show you the mapping of the Logical Azure Availability Zones to the Physical Azure Availability Zones.
 6. (optional) Export results to Excel.
 
+## example screenshot
+
+![example screenshot](./images/Screenshot-Workbook-AzMapping.png)
+

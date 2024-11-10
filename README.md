@@ -2,9 +2,7 @@
 
 With this workbook you can map the Logical Azure Availability Zones to the Physical Azure Availability Zones. This workbook is based on the information provided by Microsoft in the [Azure documentation](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview). 
 
-```plaintext
-Each datacenter is assigned to a physical zone. Physical zones are mapped to logical zones in your Azure subscription, and different subscriptions might have a different mapping order. Azure subscriptions are automatically assigned their mapping at the time the subscription is created. Because of this, the zone mapping for one subscription could be different for other subscriptions. For example: Subscription A may have physical zone X mapped to logical zone 1, while subscription B has physical zone X mapped to logical zone 3, instead.
-```
+*Each datacenter is assigned to a physical zone. Physical zones are mapped to logical zones in your Azure subscription, and different subscriptions might have a different mapping order. Azure subscriptions are automatically assigned their mapping at the time the subscription is created. Because of this, the zone mapping for one subscription could be different for other subscriptions. For example: Subscription A may have physical zone X mapped to logical zone 1, while subscription B has physical zone X mapped to logical zone 3, instead.*
 
 ## How to use this workbook
 

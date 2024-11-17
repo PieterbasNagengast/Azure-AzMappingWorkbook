@@ -12,11 +12,16 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "summarize by subscriptionId",
+        "query": "resourcecontainers\r\n| where type =~ 'microsoft.resources/subscriptions'\r\n|project Subscription=subscriptionId,State=properties.state",
         "size": 3,
         "title": "Select Subscription:",
-        "exportFieldName": "subscriptionId",
-        "exportParameterName": "subscriptionId",
+        "exportedParameters": [
+          {
+            "fieldName": "Subscription",
+            "parameterName": "subscriptionId",
+            "parameterType": 6
+          }
+        ],
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -26,6 +31,18 @@
         "gridSettings": {
           "formatters": [
             {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "State",
+              "formatter": 1
+            },
+            {
               "columnMatch": "subscriptionId",
               "formatter": 15,
               "formatOptions": {
@@ -33,30 +50,17 @@
                 "showIcon": true,
                 "customColumnWidthSetting": "200px"
               }
+            },
+            {
+              "columnMatch": "properties_state",
+              "formatter": 1
             }
           ],
-          "filter": true,
-          "sortBy": [
-            {
-              "itemKey": "$gen_link_subscriptionId_0",
-              "sortOrder": 1
-            }
-          ],
-          "labelSettings": [
-            {
-              "columnId": "subscriptionId",
-              "label": "Subscription"
-            }
-          ]
+          "filter": true
         },
-        "sortBy": [
-          {
-            "itemKey": "$gen_link_subscriptionId_0",
-            "sortOrder": 1
-          }
-        ]
+        "sortBy": []
       },
-      "customWidth": "25",
+      "customWidth": "40",
       "name": "GetSubscriptionsQuery"
     },
     {
@@ -70,7 +74,8 @@
         "exportedParameters": [
           {
             "fieldName": "name",
-            "parameterName": "location"
+            "parameterName": "location",
+            "parameterType": 8
           },
           {
             "fieldName": "Az1",
@@ -93,6 +98,10 @@
         "queryType": 12,
         "gridSettings": {
           "formatters": [
+            {
+              "columnMatch": "geography",
+              "formatter": 5
+            },
             {
               "columnMatch": "subscription",
               "formatter": 5
@@ -126,7 +135,7 @@
               }
             },
             {
-              "columnMatch": "geography",
+              "columnMatch": "name",
               "formatter": 5
             }
           ],
@@ -162,15 +171,16 @@
           }
         ]
       },
-      "customWidth": "75",
+      "customWidth": "60",
       "name": "GetAzMappingQuery"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": \\\"Az1\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az1}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": \\\"Az2\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az2}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": \\\"Az3\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az3}\\\"\\r\\n\\t}\\r\\n\\r\\n]\",\"transformers\":null}",
+        "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": 1,\\r\\n\\t\\t\\\"LogicalZonePrefix\\\":\\\"Az\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az1}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": 2,\\r\\n\\t\\t\\\"LogicalZonePrefix\\\":\\\"Az\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az2}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": 3,\\r\\n\\t\\t\\\"LogicalZonePrefix\\\":\\\"Az\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az3}\\\"\\r\\n\\t}\\r\\n\\r\\n]\",\"transformers\":null}",
         "size": 3,
+        "title": "Availability Zone Mapping",
         "exportMultipleValues": true,
         "exportedParameters": [
           {
@@ -181,7 +191,8 @@
           {
             "fieldName": "LogicalZone",
             "parameterName": "LogicalZone",
-            "parameterType": 1
+            "parameterType": 1,
+            "quote": "\""
           },
           {
             "fieldName": "PhysicalZone",
@@ -193,46 +204,61 @@
         "visualization": "tiles",
         "tileSettings": {
           "titleContent": {
-            "columnMatch": "LogicalZone",
-            "formatter": 12,
+            "columnMatch": "PhysicalZone",
+            "formatter": 4,
             "formatOptions": {
               "palette": "blue"
             }
           },
           "subtitleContent": {
-            "columnMatch": "location",
-            "formatter": 17
+            "columnMatch": "subscriptionId",
+            "formatter": 15,
+            "formatOptions": {
+              "linkTarget": null,
+              "showIcon": true
+            }
           },
           "leftContent": {
-            "columnMatch": "PhysicalZone",
-            "formatter": 3,
+            "columnMatch": "LogicalZonePrefix",
+            "formatter": 12,
             "formatOptions": {
               "palette": "blue"
             }
           },
+          "rightContent": {
+            "columnMatch": "LogicalZone",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "none"
+            }
+          },
           "secondaryContent": {
-            "columnMatch": "subscriptionId",
-            "formatter": 15,
+            "columnMatch": "location",
+            "formatter": 17,
             "formatOptions": {
               "linkColumn": "subscriptionId",
-              "linkTarget": "Resource",
-              "showIcon": true
+              "linkTarget": "Resource"
             }
           },
           "showBorder": true,
           "size": "auto"
         }
       },
-      "customWidth": "20",
+      "customWidth": "40",
       "name": "query - 4"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "{\"version\":\"1.0.0\",\"content\":\"{\\r\\n\\t\\\"location\\\": \\\"{location}\\\"\\r\\n}\",\"transformers\":null}",
+        "query": "where location =~ '{location}'\r\n| summarize count() by location\r\n\r\n",
         "size": 3,
-        "queryType": 8,
+        "title": "Region map",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "value::all"
+        ],
         "visualization": "map",
         "mapSettings": {
           "locInfo": "AzureLoc",
@@ -243,12 +269,210 @@
           "defaultSize": 30,
           "opacity": 1,
           "labelSettings": "displayName",
+          "legendMetric": "count_",
           "legendAggregation": "Sum",
           "itemColorSettings": null
         }
       },
-      "customWidth": "80",
+      "customWidth": "60",
       "name": "query - 3"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "where subscriptionId == {subscriptionId}\r\n| where type =~ 'Microsoft.Compute/VirtualMachines' or type =~ 'Microsoft.Network/publicIPAddresses' or type =~ 'Microsoft.Network/LoadBalancers'\r\n| where location =~ 'westeurope'\r\n| mv-expand LBfrontIPconfigs = properties.frontendIPConfigurations\r\n| extend ZoneConfig = iff((type =~ 'Microsoft.Network/LoadBalancers'),LBfrontIPconfigs.zones, zones)\r\n| extend ResourceSubName = iff((type =~ 'Microsoft.Network/LoadBalancers'),LBfrontIPconfigs.id, '')\r\n| extend SelectedZone = iff((ZoneConfig[0] in (dynamic([{LogicalZone}]))),'yes','no')\r\n| extend RedundantZones = iff((tostring(ZoneConfig) == tostring('[\"1\",\"2\",\"3\"]')),'yes','no')\r\n| extend stringOfZones = iff((type =~ 'Microsoft.Network/LoadBalancers'),strcat_array(LBfrontIPconfigs.zones,','),strcat_array(zones,','))\r\n| project Zones=stringOfZones,id,ResourceSubName,type,Subscription=subscriptionId,location,resourceGroup,tostring(ZoneConfig),SelectedZone,RedundantZones",
+        "size": 3,
+        "title": "Resources in {location} in {subscriptionId}",
+        "noDataMessage": "No resources found...",
+        "showRefreshButton": true,
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Zones",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "sourceColumn": "ZoneConfig",
+                    "operator": "is Empty",
+                    "representation": "error",
+                    "text": "No Zones!"
+                  },
+                  {
+                    "sourceColumn": "RedundantZones",
+                    "operator": "==",
+                    "thresholdValue": "yes",
+                    "representation": "success",
+                    "text": "Zone Redundant ({0}{1})"
+                  },
+                  {
+                    "sourceColumn": "SelectedZone",
+                    "operator": "==",
+                    "thresholdValue": "yes",
+                    "representation": "success",
+                    "text": "Zone ({0}{1})"
+                  },
+                  {
+                    "sourceColumn": "SelectedZone",
+                    "operator": "==",
+                    "thresholdValue": "no",
+                    "representation": "warning",
+                    "text": "Zone Mismatch ({0}{1})"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ],
+                "customColumnWidthSetting": "175px"
+              }
+            },
+            {
+              "columnMatch": "type",
+              "formatter": 16,
+              "formatOptions": {
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "location",
+              "formatter": 17
+            },
+            {
+              "columnMatch": "resourceGroup",
+              "formatter": 14,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "ZoneConfig",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "SelectedZone",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "RedundantZones",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "zones",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "sourceColumn": "ZoneConfig",
+                    "operator": "is Empty",
+                    "representation": "3",
+                    "text": "No Zone!{0}{1}"
+                  },
+                  {
+                    "sourceColumn": "RedundantZones",
+                    "operator": "==",
+                    "thresholdValue": "yes",
+                    "representation": "success",
+                    "text": "All Zones!{0}{1}"
+                  },
+                  {
+                    "sourceColumn": "SelectedZone",
+                    "operator": "==",
+                    "thresholdValue": "yes",
+                    "representation": "success",
+                    "text": "Zone: {0}{1}"
+                  },
+                  {
+                    "sourceColumn": "SelectedZone",
+                    "operator": "==",
+                    "thresholdValue": "no",
+                    "representation": "2",
+                    "text": "Zone mismatch: {0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": null,
+                    "text": "{0}{1}"
+                  }
+                ],
+                "compositeBarSettings": {
+                  "labelText": "",
+                  "columnSettings": []
+                },
+                "customColumnWidthSetting": "165px"
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ],
+          "hierarchySettings": {
+            "treeType": 1,
+            "groupBy": [
+              "type"
+            ],
+            "expandTopLevel": true
+          },
+          "sortBy": [
+            {
+              "itemKey": "$gen_count_$gen_group_0",
+              "sortOrder": 1
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "$gen_count_$gen_group_0",
+            "sortOrder": 1
+          }
+        ],
+        "textSettings": {
+          "style": "bignumber"
+        }
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "location",
+          "comparison": "isNotEqualTo"
+        },
+        {
+          "parameterName": "subscriptionId",
+          "comparison": "isNotEqualTo"
+        },
+        {
+          "parameterName": "LogicalZone",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "customWidth": "100",
+      "name": "query - 5"
     }
   ],
   "fallbackResourceIds": [

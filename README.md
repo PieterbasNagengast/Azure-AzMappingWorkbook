@@ -9,11 +9,14 @@ With this workbook you can map the Logical Azure Availability Zones to the Physi
 1. Deploy the workbook to Azure.
 2. Open the workbook.
 3. Select a Subscription you want to know the Azure Availability Zones mapping for.
-4. Select the Region you want to know the Azure Availability Zones mapping for.
+4. Select the Region you want to know the Azure Availability Zones mapping for. *Note: Only Azure Region which support Availability Zones are shown.*
 5. The workbook will show you the mapping of the Logical Azure Availability Zones to the Physical Azure Availability Zones.
 6. (optional) Export results to Excel.
 
-## example screenshot
+## Export Availability Zones mapping to Excel
+You can export the results of the Azure Availability Zones mapping to Excel. To do this click on the 'Export to Excel' button. This will create an Excel file with the results of the Azure Availability Zones mapping.
+
+## Example screenshot
 
 ![example screenshot](./images/Screenshot-Workbook-AzMapping.png)
 

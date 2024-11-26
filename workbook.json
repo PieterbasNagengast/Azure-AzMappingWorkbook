@@ -4,24 +4,19 @@
     {
       "type": 1,
       "content": {
-        "json": "# Azure Availability Zone Mapping\r\n\r\nPhysical Availability Zones are distinct data centers within an Azure region, each with independent power, cooling, and networking to ensure high availability. Logical Availability Zones are the mappings of these physical zones within your Azure subscription, automatically assigned per subscription."
+        "json": "# Azure Availability Zone Mapping\r\n\r\nPhysical Availability Zones are distinct data centers within an Azure region, each with independent power, cooling, and networking to ensure high availability. Logical Availability Zones are the mappings of these physical zones within your Azure subscription, automatically assigned per subscription.\r\nref: [Azure Availability Zones](https://learn.microsoft.com/en-us/azure/reliability/availability-zones-overview?tabs=azure-cli#physical-and-logical-availability-zones)"
       },
-      "name": "text - 2"
+      "name": "Description-Intro-Text"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "resourcecontainers\r\n| where type =~ 'microsoft.resources/subscriptions'\r\n|project Subscription=subscriptionId,State=properties.state",
+        "query": "summarize by subscriptionId",
         "size": 3,
         "title": "Select Subscription:",
-        "exportedParameters": [
-          {
-            "fieldName": "Subscription",
-            "parameterName": "subscriptionId",
-            "parameterType": 6
-          }
-        ],
+        "exportFieldName": "subscriptionId",
+        "exportParameterName": "subscriptionId",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -31,18 +26,6 @@
         "gridSettings": {
           "formatters": [
             {
-              "columnMatch": "Subscription",
-              "formatter": 15,
-              "formatOptions": {
-                "linkTarget": null,
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "State",
-              "formatter": 1
-            },
-            {
               "columnMatch": "subscriptionId",
               "formatter": 15,
               "formatOptions": {
@@ -50,17 +33,30 @@
                 "showIcon": true,
                 "customColumnWidthSetting": "200px"
               }
-            },
-            {
-              "columnMatch": "properties_state",
-              "formatter": 1
             }
           ],
-          "filter": true
+          "filter": true,
+          "sortBy": [
+            {
+              "itemKey": "$gen_link_subscriptionId_0",
+              "sortOrder": 1
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            }
+          ]
         },
-        "sortBy": []
+        "sortBy": [
+          {
+            "itemKey": "$gen_link_subscriptionId_0",
+            "sortOrder": 1
+          }
+        ]
       },
-      "customWidth": "40",
+      "customWidth": "25",
       "name": "GetSubscriptionsQuery"
     },
     {
@@ -69,13 +65,12 @@
         "version": "KqlItem/1.0",
         "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{subscriptionId}/locations?api-version=2022-12-01\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value[?(@.metadata.regionType==\\\"Physical\\\" && @.availabilityZoneMappings!=null)]\",\"columns\":[{\"path\":\"$.metadata.geographyGroup\",\"columnid\":\"geographyGroup\"},{\"path\":\"$.id\",\"columnid\":\"subscription\",\"columnType\":\"string\"},{\"path\":\"$.displayName\",\"columnid\":\"location\",\"columnType\":\"string\"},{\"path\":\"$.availabilityZoneMappings[0].physicalZone\",\"columnid\":\"Az1\",\"columnType\":\"string\"},{\"path\":\"$.availabilityZoneMappings[1].physicalZone\",\"columnid\":\"Az2\",\"columnType\":\"string\"},{\"path\":\"$.availabilityZoneMappings[2].physicalZone\",\"columnid\":\"Az3\",\"columnType\":\"string\"},{\"path\":\"$.metadata.geography\",\"columnid\":\"geography\",\"columnType\":\"string\"},{\"path\":\"$.name\",\"columnid\":\"name\"}]}}]}",
         "size": 3,
-        "title": "Availability Zone mapping per region:",
+        "title": "Select Region:",
         "noDataMessage": "Please select Subscription to get Availability Zone Mapping",
         "exportedParameters": [
           {
             "fieldName": "name",
-            "parameterName": "location",
-            "parameterType": 8
+            "parameterName": "location"
           },
           {
             "fieldName": "Az1",
@@ -171,89 +166,73 @@
           }
         ]
       },
-      "customWidth": "60",
+      "customWidth": "75",
       "name": "GetAzMappingQuery"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": 1,\\r\\n\\t\\t\\\"LogicalZonePrefix\\\":\\\"Az\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az1}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": 2,\\r\\n\\t\\t\\\"LogicalZonePrefix\\\":\\\"Az\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az2}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicalZone\\\": 3,\\r\\n\\t\\t\\\"LogicalZonePrefix\\\":\\\"Az\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az3}\\\"\\r\\n\\t}\\r\\n\\r\\n]\",\"transformers\":null}",
+        "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n\\t{\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az1\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az1}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az2\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az2}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az3\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az3}\\\"\\r\\n\\t}\\r\\n\\r\\n]\",\"transformers\":null}",
         "size": 3,
-        "title": "Availability Zone Mapping",
-        "exportMultipleValues": true,
-        "exportedParameters": [
-          {
-            "fieldName": "subscriptionId",
-            "parameterName": "subscriptionId",
-            "parameterType": 1
-          },
-          {
-            "fieldName": "LogicalZone",
-            "parameterName": "LogicalZone",
-            "parameterType": 1,
-            "quote": "\""
-          },
-          {
-            "fieldName": "PhysicalZone",
-            "parameterName": "PhysicalZone",
-            "parameterType": 1
-          }
-        ],
+        "title": "Availability Zone mapping:",
+        "showExportToExcel": true,
         "queryType": 8,
         "visualization": "tiles",
         "tileSettings": {
           "titleContent": {
-            "columnMatch": "PhysicalZone",
-            "formatter": 4,
+            "columnMatch": "LogicZone",
+            "formatter": 12,
             "formatOptions": {
               "palette": "blue"
             }
           },
           "subtitleContent": {
-            "columnMatch": "subscriptionId",
-            "formatter": 15,
-            "formatOptions": {
-              "linkTarget": null,
-              "showIcon": true
-            }
+            "columnMatch": "location",
+            "formatter": 17
           },
           "leftContent": {
-            "columnMatch": "LogicalZonePrefix",
-            "formatter": 12,
+            "columnMatch": "PhysicalZone",
+            "formatter": 3,
             "formatOptions": {
-              "palette": "blue"
-            }
-          },
-          "rightContent": {
-            "columnMatch": "LogicalZone",
-            "formatter": 12,
-            "formatOptions": {
-              "palette": "none"
+              "palette": "categorical",
+              "compositeBarSettings": {
+                "labelText": "",
+                "columnSettings": [
+                  {
+                    "columnName": "PhysicalZone",
+                    "color": "lightBlue",
+                    "backgroundPattern": "stripes-left"
+                  }
+                ]
+              }
             }
           },
           "secondaryContent": {
-            "columnMatch": "location",
-            "formatter": 17,
+            "columnMatch": "subscriptionId",
+            "formatter": 15,
             "formatOptions": {
               "linkColumn": "subscriptionId",
-              "linkTarget": "Resource"
+              "linkTarget": "Resource",
+              "showIcon": true
             }
           },
           "showBorder": true,
+          "sortCriteriaField": "LogicZone",
+          "sortOrderField": 1,
           "size": "auto"
         }
       },
-      "customWidth": "40",
-      "name": "query - 4"
+      "customWidth": "20",
+      "name": "AzMapping-JSON-Query"
     },
     {
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "where location =~ '{location}'\r\n| summarize count() by location\r\n\r\n",
+        "query": "resources\r\n| where location =~ \"{location}\"\r\n| summarize Resources = count() by location\r\n| union (datatable(location:string, Resources:long) [\"{location}\", 0])\r\n| summarize Resources = sum(Resources) by location",
         "size": 3,
-        "title": "Region map",
+        "title": "Region map (incl. resource count):",
         "queryType": 1,
         "resourceType": "microsoft.resourcegraph/resources",
         "crossComponentResources": [
@@ -269,210 +248,13 @@
           "defaultSize": 30,
           "opacity": 1,
           "labelSettings": "displayName",
-          "legendMetric": "count_",
+          "legendMetric": "Resources",
           "legendAggregation": "Sum",
           "itemColorSettings": null
         }
       },
-      "customWidth": "60",
-      "name": "query - 3"
-    },
-    {
-      "type": 3,
-      "content": {
-        "version": "KqlItem/1.0",
-        "query": "where subscriptionId == {subscriptionId}\r\n| where type =~ 'Microsoft.Compute/VirtualMachines' or type =~ 'Microsoft.Network/publicIPAddresses' or type =~ 'Microsoft.Network/LoadBalancers'\r\n| where location =~ 'westeurope'\r\n| mv-expand LBfrontIPconfigs = properties.frontendIPConfigurations\r\n| extend ZoneConfig = iff((type =~ 'Microsoft.Network/LoadBalancers'),LBfrontIPconfigs.zones, zones)\r\n| extend ResourceSubName = iff((type =~ 'Microsoft.Network/LoadBalancers'),LBfrontIPconfigs.id, '')\r\n| extend SelectedZone = iff((ZoneConfig[0] in (dynamic([{LogicalZone}]))),'yes','no')\r\n| extend RedundantZones = iff((tostring(ZoneConfig) == tostring('[\"1\",\"2\",\"3\"]')),'yes','no')\r\n| extend stringOfZones = iff((type =~ 'Microsoft.Network/LoadBalancers'),strcat_array(LBfrontIPconfigs.zones,','),strcat_array(zones,','))\r\n| project Zones=stringOfZones,id,ResourceSubName,type,Subscription=subscriptionId,location,resourceGroup,tostring(ZoneConfig),SelectedZone,RedundantZones",
-        "size": 3,
-        "title": "Resources in {location} in {subscriptionId}",
-        "noDataMessage": "No resources found...",
-        "showRefreshButton": true,
-        "showExportToExcel": true,
-        "queryType": 1,
-        "resourceType": "microsoft.resourcegraph/resources",
-        "crossComponentResources": [
-          "value::all"
-        ],
-        "visualization": "table",
-        "gridSettings": {
-          "formatters": [
-            {
-              "columnMatch": "Zones",
-              "formatter": 18,
-              "formatOptions": {
-                "thresholdsOptions": "icons",
-                "thresholdsGrid": [
-                  {
-                    "sourceColumn": "ZoneConfig",
-                    "operator": "is Empty",
-                    "representation": "error",
-                    "text": "No Zones!"
-                  },
-                  {
-                    "sourceColumn": "RedundantZones",
-                    "operator": "==",
-                    "thresholdValue": "yes",
-                    "representation": "success",
-                    "text": "Zone Redundant ({0}{1})"
-                  },
-                  {
-                    "sourceColumn": "SelectedZone",
-                    "operator": "==",
-                    "thresholdValue": "yes",
-                    "representation": "success",
-                    "text": "Zone ({0}{1})"
-                  },
-                  {
-                    "sourceColumn": "SelectedZone",
-                    "operator": "==",
-                    "thresholdValue": "no",
-                    "representation": "warning",
-                    "text": "Zone Mismatch ({0}{1})"
-                  },
-                  {
-                    "operator": "Default",
-                    "thresholdValue": null,
-                    "representation": "success",
-                    "text": "{0}{1}"
-                  }
-                ],
-                "customColumnWidthSetting": "175px"
-              }
-            },
-            {
-              "columnMatch": "type",
-              "formatter": 16,
-              "formatOptions": {
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "Subscription",
-              "formatter": 15,
-              "formatOptions": {
-                "linkTarget": null,
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "location",
-              "formatter": 17
-            },
-            {
-              "columnMatch": "resourceGroup",
-              "formatter": 14,
-              "formatOptions": {
-                "linkTarget": null,
-                "showIcon": true
-              }
-            },
-            {
-              "columnMatch": "ZoneConfig",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "SelectedZone",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "RedundantZones",
-              "formatter": 5
-            },
-            {
-              "columnMatch": "zones",
-              "formatter": 18,
-              "formatOptions": {
-                "thresholdsOptions": "icons",
-                "thresholdsGrid": [
-                  {
-                    "sourceColumn": "ZoneConfig",
-                    "operator": "is Empty",
-                    "representation": "3",
-                    "text": "No Zone!{0}{1}"
-                  },
-                  {
-                    "sourceColumn": "RedundantZones",
-                    "operator": "==",
-                    "thresholdValue": "yes",
-                    "representation": "success",
-                    "text": "All Zones!{0}{1}"
-                  },
-                  {
-                    "sourceColumn": "SelectedZone",
-                    "operator": "==",
-                    "thresholdValue": "yes",
-                    "representation": "success",
-                    "text": "Zone: {0}{1}"
-                  },
-                  {
-                    "sourceColumn": "SelectedZone",
-                    "operator": "==",
-                    "thresholdValue": "no",
-                    "representation": "2",
-                    "text": "Zone mismatch: {0}{1}"
-                  },
-                  {
-                    "operator": "Default",
-                    "thresholdValue": null,
-                    "representation": null,
-                    "text": "{0}{1}"
-                  }
-                ],
-                "compositeBarSettings": {
-                  "labelText": "",
-                  "columnSettings": []
-                },
-                "customColumnWidthSetting": "165px"
-              }
-            },
-            {
-              "columnMatch": "subscriptionId",
-              "formatter": 15,
-              "formatOptions": {
-                "linkTarget": null,
-                "showIcon": true
-              }
-            }
-          ],
-          "hierarchySettings": {
-            "treeType": 1,
-            "groupBy": [
-              "type"
-            ],
-            "expandTopLevel": true
-          },
-          "sortBy": [
-            {
-              "itemKey": "$gen_count_$gen_group_0",
-              "sortOrder": 1
-            }
-          ]
-        },
-        "sortBy": [
-          {
-            "itemKey": "$gen_count_$gen_group_0",
-            "sortOrder": 1
-          }
-        ],
-        "textSettings": {
-          "style": "bignumber"
-        }
-      },
-      "conditionalVisibilities": [
-        {
-          "parameterName": "location",
-          "comparison": "isNotEqualTo"
-        },
-        {
-          "parameterName": "subscriptionId",
-          "comparison": "isNotEqualTo"
-        },
-        {
-          "parameterName": "LogicalZone",
-          "comparison": "isNotEqualTo"
-        }
-      ],
-      "customWidth": "100",
-      "name": "query - 5"
+      "customWidth": "80",
+      "name": "AzureRegionMap"
     }
   ],
   "fallbackResourceIds": [

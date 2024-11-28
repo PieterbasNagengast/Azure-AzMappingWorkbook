@@ -173,9 +173,11 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n\\t{\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az1\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az1}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az2\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az2}\\\"\\r\\n\\t},\\r\\n\\t\\t{\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az3\\\",\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az3}\\\"\\r\\n\\t}\\r\\n\\r\\n]\",\"transformers\":null}",
+        "query": "{\"version\":\"1.0.0\",\"content\":\"[\\r\\n\\t{\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az1\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az1}\\\"\\r\\n\\t},\\r\\n\\t{\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az2\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az2}\\\"\\r\\n\\t},\\r\\n\\t{\\r\\n\\t\\t\\\"subscriptionId\\\": \\\"{subscriptionId}\\\",\\r\\n\\t\\t\\\"location\\\": \\\"{location}\\\",\\r\\n\\t\\t\\\"LogicZone\\\": \\\"Az3\\\",\\r\\n\\t\\t\\\"PhysicalZone\\\": \\\"{Az3}\\\"\\r\\n\\t}\\r\\n]\",\"transformers\":null}",
         "size": 3,
         "title": "Availability Zone mapping:",
+        "exportFieldName": "location",
+        "exportParameterName": "location",
         "showExportToExcel": true,
         "queryType": 8,
         "visualization": "tiles",
@@ -193,9 +195,17 @@
           },
           "leftContent": {
             "columnMatch": "PhysicalZone",
-            "formatter": 3,
+            "formatter": 18,
             "formatOptions": {
-              "palette": "categorical",
+              "thresholdsOptions": "icons",
+              "thresholdsGrid": [
+                {
+                  "operator": "Default",
+                  "thresholdValue": null,
+                  "representation": "BlankDashboard",
+                  "text": "{0}{1}"
+                }
+              ],
               "compositeBarSettings": {
                 "labelText": "",
                 "columnSettings": [
@@ -221,6 +231,58 @@
           "sortCriteriaField": "LogicZone",
           "sortOrderField": 1,
           "size": "auto"
+        },
+        "graphSettings": {
+          "type": 2,
+          "topContent": {
+            "columnMatch": "LogicZone",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            }
+          },
+          "centerContent": {
+            "columnMatch": "PhysicalZone",
+            "formatter": 1
+          },
+          "bottomContent": {
+            "columnMatch": "subscriptionId",
+            "formatter": 15,
+            "formatOptions": {
+              "linkTarget": null,
+              "showIcon": true
+            }
+          },
+          "hivesContent": {
+            "columnMatch": "location",
+            "formatter": 1
+          },
+          "nodeIdField": "LogicZone",
+          "sourceIdField": "PhysicalZone",
+          "targetIdField": "PhysicalZone",
+          "graphOrientation": 3,
+          "showOrientationToggles": false,
+          "nodeSize": null,
+          "staticNodeSize": 100,
+          "colorSettings": null,
+          "groupByField": "location",
+          "hivesMargin": 5,
+          "edgeColorSettings": null
+        },
+        "statSettings": {
+          "valueField": "PhysicalZone",
+          "valueAggregation": "None",
+          "colorSettings": {
+            "type": "static",
+            "mode": "background",
+            "heatmapPalette": "greenRed",
+            "thresholdsGrid": []
+          },
+          "iconSettings": {
+            "thresholdsGrid": []
+          },
+          "tagText": "",
+          "valueFontStyle": "auto"
         }
       },
       "customWidth": "20",
